@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alexandria Williams</title>
+  <meta name="description" content="Alexandria Williams is a journalist and researcher in Köln covering tech policy and how technology moves between China, Africa and Europe.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add("js");</script>
+  <style>
+    :root {
+      --paper: #f1f2ee;
+      --land: #e1e5e0;
+      --ink: #18222b;
+      --slate: #56656f;
+      --rule: #cfd4d1;
+      --stamp: #2a44c2;
+
+      --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+      --serif: "Literata", Georgia, "Times New Roman", serif;
+
+      --gutter: clamp(1.25rem, 5vw, 4rem);
+      --label: 11rem;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      font-optical-sizing: auto;
+    }
+
+    a { color: var(--stamp); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; border-radius: 2px; }
+
+    .skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--paper); padding: 0.5rem 1rem; }
+    .skip:focus { left: 1rem; top: 1rem; }
+
+    .wrap { max-width: 70rem; margin: 0 auto; padding: 0 var(--gutter); }
+
+    /* Header */
+    .site-header {
+      display: flex; flex-wrap: wrap; gap: 0.75rem 2rem;
+      justify-content: space-between; align-items: baseline;
+      padding-top: 2rem; padding-bottom: 2rem;
+    }
+    .site-name { font-family: var(--sans); font-weight: 700; font-size: 1.05rem; color: var(--ink); text-decoration: none; }
+    .site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+    .site-nav a { font-family: var(--sans); font-size: 0.95rem; color: var(--ink); text-decoration: none; }
+    .site-nav a:hover { color: var(--stamp); }
+
+    /* Hero */
+    .hero { padding-top: clamp(2rem, 6vw, 4.5rem); padding-bottom: clamp(2.5rem, 6vw, 4.5rem); }
+    .hero-text {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 1.5rem 4rem;
+      align-items: end;
+    }
+    .hero h1 {
+      font-family: var(--sans);
+      font-weight: 650;
+      font-stretch: 112%;
+      font-size: clamp(2rem, 4.4vw, 3.5rem);
+      line-height: 1.06;
+      letter-spacing: -0.015em;
+      margin: 0;
+    }
+    .hero-text p { margin: 0; font-size: 1.15rem; line-height: 1.55; color: var(--slate); }
+
+    /* Map */
+    .map-figure { margin: clamp(2rem, 5vw, 3.5rem) 0 0; }
+    .map { display: block; width: 100%; height: auto; overflow: visible; }
+    .map .land { fill: var(--land); }
+    .map .arc {
+      fill: none; stroke: var(--stamp); stroke-width: 2; stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+    }
+    .map .arrow { fill: var(--stamp); }
+    .map .stop circle { fill: var(--ink); }
+    .map .stop.now circle { fill: var(--stamp); }
+    .map .num { font-family: var(--sans); font-size: 14px; font-weight: 700; fill: var(--paper); }
+    .map .label {
+      font-family: var(--sans); font-size: 19px; font-weight: 600; fill: var(--ink);
+      paint-order: stroke; stroke: var(--paper); stroke-width: 6px; stroke-linejoin: round;
+    }
+
+    /* One moment of motion: the route draws itself, leg by leg */
+    @media (prefers-reduced-motion: no-preference) {
+      .map .arc { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 0.9s ease-in-out forwards; }
+      .map .arrow { opacity: 0; animation: appear 0.2s ease-out forwards; }
+      .map .arc-1 { animation-duration: 1.1s; }
+      .map .arrow-1 { animation-delay: 1.05s; }
+      .map .arc-2 { animation-delay: 1.2s; }
+      .map .arrow-2 { animation-delay: 2.05s; }
+      .map .arc-3 { animation-delay: 2.2s; animation-duration: 0.5s; }
+      .map .arrow-3 { animation-delay: 2.65s; }
+      @keyframes draw { to { stroke-dashoffset: 0; } }
+      @keyframes appear { to { opacity: 1; } }
+      html { scroll-behavior: smooth; }
+    }
+
+    .map-key { margin-top: 1rem; font-family: var(--sans); font-size: 0.95rem; color: var(--slate); }
+
+    /* Sections */
+    .section {
+      display: grid;
+      grid-template-columns: var(--label) minmax(0, 1fr);
+      gap: 1rem 3rem;
+      padding-bottom: 3.5rem;
+    }
+    .section::before { content: ""; grid-column: 1 / -1; height: 1px; background: var(--rule); margin-bottom: 2.5rem; }
+    .section > h2 { font-family: var(--sans); font-weight: 650; font-size: 1.05rem; line-height: 1.4; margin: 0.25rem 0 0; }
+    .section-body { max-width: 41rem; }
+    .section-body > p:first-child { margin-top: 0; }
+    .section-body p { margin: 0 0 1.1em; }
+
+    /* Archive filters */
+    .filters { display: none; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.75rem; padding: 0; list-style: none; }
+    .js .filters { display: flex; }
+    .filters button {
+      font: 500 0.9rem/1 var(--sans);
+      color: var(--ink); background: transparent;
+      border: 1.5px solid var(--rule); border-radius: 999px;
+      padding: 0.5em 0.9em; cursor: pointer;
+    }
+    .filters button:hover { border-color: var(--stamp); color: var(--stamp); }
+    .filters button[aria-pressed="true"] { background: var(--stamp); border-color: var(--stamp); color: var(--paper); }
+    .filter-status { font-family: var(--sans); font-size: 0.9rem; color: var(--slate); min-height: 1.4em; margin: 0 0 1.75rem; }
+
+    /* Archive entries */
+    .entries { list-style: none; margin: 0; padding: 0; }
+    .entry + .entry { margin-top: 2.5rem; }
+    .entry[hidden] { display: none; }
+    .meta {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.9rem;
+      font-family: var(--sans); font-size: 0.95rem; margin: 0 0 0.35rem;
+    }
+    .meta .place { font-weight: 650; }
+    .meta .outlet, .meta time { color: var(--slate); }
+    .group + .group { margin-top: 4rem; }
+    .group[hidden] { display: none; }
+    .group-title {
+      font-family: var(--sans); font-weight: 650; font-stretch: 112%; font-size: 1.6rem; line-height: 1.2;
+      margin: 0 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--ink);
+    }
+    .entry h4 { font-family: var(--sans); font-weight: 600; font-stretch: 104%; font-size: 1.35rem; line-height: 1.25; margin: 0 0 0.5rem; }
+    .entry h4 a { color: var(--ink); text-decoration: none; }
+    .entry h4 a:hover { color: var(--stamp); text-decoration: underline; }
+    .entry p:last-child { margin-bottom: 0; }
+
+    /* Flow stamps: which way the technology or trade in the story moves */
+    .stamp {
+      font-family: var(--sans); font-weight: 600; font-size: 0.8rem; line-height: 1;
+      color: var(--stamp); border: 1.5px solid var(--stamp); border-radius: 3px;
+      padding: 0.3em 0.5em 0.28em; align-self: center;
+    }
+
+    /* Record lists */
+    .records { list-style: none; margin: 0; padding: 0; }
+    .records li { padding: 0.9rem 0; border-bottom: 1px solid var(--rule); }
+    .records li:first-child { padding-top: 0; }
+    .records li:last-child { border-bottom: 0; padding-bottom: 0; }
+    .records strong { font-family: var(--sans); font-weight: 600; font-size: 1.05rem; display: block; }
+    .records span { color: var(--slate); }
+    .subhead { font-family: var(--sans); font-weight: 600; font-size: 1rem; color: var(--slate); margin: 2.5rem 0 1rem; }
+    .subhead:first-child { margin-top: 0; }
+
+    /* Contact */
+    .contact-links { list-style: none; margin: 1.5rem 0 0; padding: 0; }
+    .contact-links li { font-family: var(--sans); font-size: 1.2rem; line-height: 1.4; }
+    .contact-links li + li { margin-top: 0.6rem; }
+
+    .site-footer { padding-bottom: 3rem; font-family: var(--sans); font-size: 0.85rem; color: var(--slate); }
+    .site-footer p { margin: 0; padding-top: 2rem; border-top: 1px solid var(--rule); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; }
+
+    @media (max-width: 760px) {
+      body { font-size: 1.0625rem; }
+      .hero-text { grid-template-columns: 1fr; }
+      .map .label { font-size: 40px; stroke-width: 10px; }
+      .map .stop circle { r: 18px; }
+      .map .num { font-size: 22px; }
+      .section { grid-template-columns: 1fr; gap: 1.25rem; padding-bottom: 2.5rem; }
+      .section::before { margin-bottom: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="wrap site-header">
+    <a class="site-name" href="#top">Alexandria Williams</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Archive</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" id="top">
+      <div class="hero-text">
+        <h1>I report on how technology moves between China, Africa and Europe.</h1>
+        <p>Journalist and researcher in Köln. I edit at Deutsche Welle and write about the rules that shape platforms, AI and the people who use them.</p>
+      </div>
+
+      <figure class="map-figure">
+        <svg class="map" viewBox="0 0 1380 700" role="img" aria-labelledby="map-title">
+          <title id="map-title">Map of my research journey: Beijing, Nairobi, Berlin and Köln</title>
+          <defs>
+            <linearGradient id="fade-l" x1="0" x2="1"><stop offset="0" stop-color="#f1f2ee"/><stop offset="1" stop-color="#f1f2ee" stop-opacity="0"/></linearGradient>
+            <linearGradient id="fade-r" x1="1" x2="0"><stop offset="0" stop-color="#f1f2ee"/><stop offset="1" stop-color="#f1f2ee" stop-opacity="0"/></linearGradient>
+            <linearGradient id="fade-t" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#f1f2ee"/><stop offset="1" stop-color="#f1f2ee" stop-opacity="0"/></linearGradient>
+            <linearGradient id="fade-b" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#f1f2ee"/><stop offset="1" stop-color="#f1f2ee" stop-opacity="0"/></linearGradient>
+          </defs>
+          <path class="land" d="M1298,700L1290,696L1299,694L1304,697L1308,700L1308,700L1298,700ZM1335,700L1336,699L1340,693L1350,689L1351,687L1359,684L1366,684L1370,683L1373,684L1370,687L1359,691L1351,694L1346,700L1335,700ZM1279,681L1283,684L1289,683L1291,687L1280,689L1273,690L1267,690L1271,685L1276,684ZM1329,681L1328,687L1313,689L1299,688L1299,684L1307,682L1313,685L1320,685ZM1186,668L1205,669L1208,665L1226,669L1230,676L1245,678L1257,684L1246,688L1235,683L1226,684L1215,683L1206,681L1194,677L1187,676L1183,678L1165,674L1163,669L1154,669L1161,659L1173,660L1181,663L1185,664ZM1372,635L1369,638L1362,636L1360,632L1370,631ZM1380,634L1379,634L1380,632L1380,634ZM1352,586L1344,596L1337,598L1327,596L1311,596L1302,598L1300,605L1309,614L1315,610L1333,606L1333,611L1328,609L1324,615L1315,619L1325,632L1323,635L1332,647L1332,653L1326,656L1322,653L1327,645L1317,649L1315,646L1316,642L1309,636L1310,626L1303,629L1304,641L1304,655L1298,657L1294,654L1297,645L1295,635L1291,635L1288,628L1292,621L1293,614L1298,598L1300,594L1309,587L1317,590L1329,591L1341,591L1351,584ZM1380,601L1380,603L1380,603L1380,607L1380,607L1377,603L1374,590L1376,582L1379,578L1380,583L1380,601ZM1158,659L1147,659L1139,650L1126,642L1122,636L1114,628L1109,621L1101,607L1093,598L1090,590L1086,582L1077,575L1072,567L1064,561L1054,550L1053,545L1059,546L1075,548L1084,557L1091,564L1097,568L1106,579L1117,579L1125,586L1131,594L1138,599L1134,607L1140,611L1144,611L1145,618L1149,623L1156,624L1161,631L1159,643ZM1279,582L1290,591L1278,592L1275,599L1275,608L1266,615L1265,625L1261,640L1260,637L1249,641L1245,635L1238,634L1233,631L1221,635L1217,630L1210,630L1202,629L1201,616L1196,613L1191,605L1190,596L1191,587L1197,580L1204,583L1212,581L1214,573L1218,571L1230,569L1237,561L1242,555L1246,551L1255,546L1262,539L1267,531L1271,531L1276,536L1277,540L1283,543L1292,546L1291,550L1284,550L1286,555L1279,559L1273,568L1280,577ZM1364,516L1365,522L1365,528L1362,537L1358,527L1354,532L1357,540L1354,544L1342,538L1339,531L1342,526L1336,522L1333,526L1328,525L1321,531L1319,528L1323,520L1329,517L1335,513L1338,518L1346,515L1348,510L1355,510L1354,502L1362,507L1363,512ZM912,538L903,540L899,532L897,518L901,502L908,507L913,514L918,525L916,535ZM1340,497L1336,501L1333,507L1330,510L1324,503L1326,500L1328,497L1329,491L1335,491L1333,497L1341,488ZM1285,507L1272,516L1277,509L1284,503L1290,496L1295,486L1297,494L1290,500ZM1319,481L1325,484L1331,484L1331,488L1326,493L1320,496L1320,491L1320,486ZM1355,478L1358,490L1350,487L1350,490L1353,496L1348,499L1348,492L1345,491L1343,485L1349,486L1349,482L1343,474L1352,475ZM1315,469L1313,478L1308,473L1303,465L1312,466ZM1313,415L1319,418L1322,415L1323,418L1322,422L1325,429L1323,437L1317,441L1315,449L1317,457L1323,458L1327,457L1340,462L1339,468L1342,470L1341,475L1333,470L1329,464L1327,468L1320,462L1311,464L1306,461L1307,457L1310,455L1307,452L1306,456L1301,450L1299,446L1299,436L1303,440L1304,424L1307,415ZM1203,413L1195,418L1187,415L1186,406L1191,402L1202,399L1208,399L1210,403L1206,407ZM1312,372L1307,380L1302,372L1301,364L1307,355L1315,347L1320,350L1318,356ZM446,243L439,248L440,249L440,250L430,254L425,253L423,249L427,249L428,249L429,246L437,246ZM337,243L342,246L350,246L358,246L357,248L363,247L362,250L347,251L347,249L335,247ZM255,218L252,226L253,229L251,234L243,230L238,229L224,224L226,219L237,220L248,219ZM192,188L198,195L197,208L192,208L188,211L184,208L184,196L182,190L187,191ZM196,178L192,186L188,184L185,177L187,174L194,170ZM32,77L14,83L0,82L8,71L3,61L17,53L24,49L33,48L43,54L38,61L40,68ZM227,44L221,52L210,46L209,42L224,39ZM70,14L59,24L69,23L80,23L78,31L69,40L79,41L89,54L96,55L102,67L105,71L117,73L116,79L110,82L114,87L105,92L92,92L75,95L70,93L64,98L55,97L48,100L42,98L57,88L66,86L50,84L47,80L58,77L52,72L54,65L69,66L71,60L64,54L52,52L49,49L53,45L50,42L44,47L44,37L38,32L42,22L50,14L58,14ZM591,187L596,194L601,195L604,197L596,198L594,206L592,210L589,212L589,217L592,224L601,226L608,231L623,233L638,230L639,228L637,221L639,210L631,207L634,200L627,200L629,191L639,194L647,190L640,184L637,179L629,181L628,189L625,182L624,180L627,176L625,172L613,169L609,160L603,157L603,154L613,155L613,148L622,146L630,147L632,138L630,131L620,132L612,130L600,134L591,136L586,142L577,144L567,154L576,163L575,170L586,182ZM1380,200L1380,200L1375,202L1375,207L1374,208L1378,209L1380,211L1380,252L1380,252L1374,255L1365,256L1364,251L1366,243L1361,233L1369,231L1362,223L1357,221L1356,222L1353,223L1352,221L1350,221L1347,219L1350,215L1352,213L1351,212L1354,206L1353,204L1347,203L1343,201L1329,204L1321,208L1311,211L1316,206L1314,202L1322,196L1316,191L1308,194L1296,201L1290,207L1280,208L1275,213L1281,219L1289,221L1289,226L1297,228L1308,221L1317,225L1324,225L1325,231L1311,233L1306,239L1297,244L1292,251L1302,256L1306,266L1312,275L1319,283L1319,291L1313,293L1315,299L1321,302L1319,310L1317,318L1311,319L1304,329L1296,343L1287,355L1273,364L1259,372L1248,373L1242,378L1238,375L1232,379L1218,384L1208,386L1204,397L1199,397L1196,390L1199,386L1185,383L1180,384L1167,393L1159,402L1157,409L1164,420L1174,433L1183,439L1189,447L1193,466L1192,483L1184,490L1172,496L1164,505L1152,514L1148,508L1151,501L1143,495L1135,494L1131,488L1126,478L1117,474L1108,474L1110,466L1101,466L1100,477L1095,492L1092,500L1092,508L1099,508L1103,517L1105,526L1110,531L1116,533L1121,538L1124,539L1130,545L1134,551L1134,558L1133,563L1134,566L1135,572L1139,575L1142,584L1142,587L1135,588L1126,580L1114,572L1113,567L1107,561L1106,552L1102,547L1103,540L1101,535L1097,532L1095,527L1090,521L1085,516L1083,522L1081,517L1083,510L1086,501L1085,493L1088,486L1084,480L1085,469L1081,464L1078,452L1076,439L1072,431L1065,436L1054,443L1048,442L1042,440L1045,427L1043,418L1035,406L1037,403L1031,401L1024,393L1021,388L1020,383L1018,378L1014,372L1005,372L1006,376L1003,382L998,380L997,381L994,380L990,379L989,383L982,383L970,385L970,393L965,398L951,405L939,417L932,423L922,430L922,434L917,437L908,440L903,441L900,449L902,462L903,470L899,479L899,496L893,497L889,505L892,508L883,511L879,517L875,520L866,511L861,497L857,487L854,482L849,473L846,460L844,454L835,440L831,421L828,408L828,396L826,386L812,392L805,391L792,379L796,375L793,372L782,363L774,361L771,353L764,346L745,348L729,348L715,349L696,346L685,344L674,343L670,330L665,329L657,330L647,335L635,332L625,324L615,321L609,312L601,299L596,300L589,297L586,301L580,300L582,305L581,307L584,314L588,323L593,325L595,329L602,333L602,337L601,341L602,344L605,347L607,350L608,352L607,345L610,340L613,339L616,342L616,348L614,354L616,358L618,357L618,360L626,358L634,358L640,359L647,352L654,346L661,339L664,336L665,337L664,341L663,343L664,351L668,358L674,361L681,363L687,364L692,370L694,373L698,375L698,377L694,383L693,386L689,389L685,396L680,395L678,398L677,403L678,409L677,411L672,411L666,414L665,419L663,421L657,421L653,424L653,428L648,431L642,430L636,433L631,433L624,436L622,441L622,444L612,448L596,453L587,460L582,461L579,460L574,464L567,466L559,467L556,467L554,470L551,470L550,473L545,473L542,474L535,474L532,468L533,462L531,459L529,452L526,448L528,447L527,443L528,441L528,437L527,432L523,429L523,425L518,422L512,413L509,405L502,398L498,397L491,387L490,380L491,374L485,363L480,359L475,357L472,351L472,349L469,344L466,342L463,334L456,326L451,319L446,319L448,314L448,310L450,306L449,305L446,309L444,317L442,322L439,324L436,320L431,316L424,301L423,302L427,313L433,323L441,339L445,344L448,350L457,361L455,362L455,369L467,378L469,380L472,390L470,392L471,402L475,414L479,416L484,420L490,432L493,441L498,446L512,455L517,461L523,467L526,470L531,473L533,476L533,480L527,483L531,485L535,487L537,491L541,496L546,496L556,493L566,492L575,489L580,488L584,486L589,486L593,486L597,484L603,483L607,480L611,480L611,483L610,488L610,494L608,497L606,508L601,519L595,532L586,547L577,558L566,571L556,580L541,589L531,597L520,609L518,614L516,617L509,621L506,625L503,626L501,633L498,637L496,643L492,647L487,659L488,665L494,668L495,671L492,677L493,680L492,685L495,691L499,700L232,700L232,700L231,698L229,692L229,690L232,686L229,676L227,669L222,663L223,661L222,658L219,650L211,640L201,630L194,621L188,611L188,608L190,605L193,597L195,590L193,588L196,577L198,569L194,563L189,561L187,556L185,555L185,552L175,556L171,555L167,558L159,557L154,551L150,544L143,537L136,537L127,537L119,539L111,541L95,547L89,550L80,553L71,550L67,550L60,548L54,548L42,550L35,553L25,557L23,556L20,556L10,552L1,544L0,543L0,305L0,305L4,301L2,288L6,280L7,274L13,268L23,263L31,259L38,249L41,242L48,242L54,247L64,246L74,248L78,248L88,243L99,241L105,237L115,234L132,232L148,231L153,233L163,229L173,229L177,231L184,231L195,226L202,228L202,233L210,229L211,231L206,236L206,241L209,243L208,252L202,257L203,262L209,262L211,267L215,269L227,272L231,271L239,273L252,277L257,286L266,288L280,292L291,297L296,295L301,290L298,282L301,278L309,273L315,272L329,274L332,278L336,278L339,280L349,281L352,284L365,284L375,287L384,290L389,291L397,288L401,285L410,284L417,286L420,291L422,287L430,290L438,290L443,288L446,285L445,284L448,279L450,272L451,269L451,269L455,261L460,254L460,254L459,246L461,242L458,237L462,233L456,234L447,232L440,238L425,239L417,234L406,233L404,237L397,239L387,233L376,233L370,223L363,218L368,210L362,205L373,196L388,195L392,188L411,189L423,183L435,180L452,180L469,187L483,191L495,189L504,190L516,185L517,180L515,174L509,170L503,169L500,166L487,157L475,153L467,148L474,146L482,138L477,134L491,130L491,127L482,129L474,130L468,133L458,134L450,137L450,143L455,146L465,145L463,149L452,151L439,156L433,154L435,150L425,147L426,145L436,141L433,139L417,137L417,133L407,134L404,140L396,147L396,150L391,152L388,151L386,163L380,167L377,174L380,180L381,184L390,187L388,189L376,190L372,193L364,198L360,194L361,192L354,191L349,191L337,193L344,199L339,200L333,200L328,195L326,197L329,203L334,208L330,210L335,215L340,218L340,223L331,221L334,226L328,227L332,236L325,236L317,232L313,224L311,217L307,212L302,207L302,204L300,203L300,201L294,197L293,193L294,186L295,183L294,181L292,180L289,177L284,175L275,172L269,168L260,165L252,158L254,157L249,153L249,149L243,148L240,152L237,149L237,145L237,145L239,144L231,143L223,146L224,151L223,154L226,159L235,164L240,172L251,180L259,180L262,183L259,185L268,188L275,191L284,196L285,198L283,202L277,197L269,196L265,202L272,206L271,211L266,212L261,220L257,221L257,218L259,212L261,210L257,205L254,200L250,198L247,194L241,192L236,188L229,187L221,183L212,176L205,171L202,161L197,160L189,156L184,158L178,162L174,163L165,169L146,166L131,169L130,175L130,181L121,188L108,190L107,193L101,199L97,207L101,213L95,217L93,224L86,226L79,233L66,233L56,233L50,237L46,241L41,240L38,236L35,231L25,229L21,232L16,230L11,231L13,223L12,217L7,216L5,213L6,206L10,202L10,198L12,192L12,188L10,185L10,181L10,174L6,170L20,163L32,164L46,164L57,166L65,165L81,166L86,160L88,140L78,129L70,124L55,120L54,113L67,111L84,114L81,102L90,107L113,99L116,91L125,89L133,87L138,84L147,69L161,65L169,65L171,63L179,63L181,65L188,60L186,56L185,50L181,45L181,35L183,32L185,29L194,28L198,26L206,23L205,28L203,31L204,34L209,35L207,39L204,38L196,45L199,50L199,54L209,56L209,60L220,58L225,55L236,59L241,62L248,59L264,55L276,51L286,53L287,56L297,56L299,51L313,48L311,40L311,32L316,26L325,22L333,30L341,30L343,22L344,16L341,17L334,14L333,8L346,5L359,4L369,6L380,5L391,0L1380,0ZM341,0L329,2L327,0L341,0ZM287,0L279,10L268,13L264,30L259,39L247,38L241,46L229,46L226,37L218,26L210,11L204,5L184,17L171,19L157,14L153,3L153,0L287,0Z"/>
+          <!-- Soften the map edges into the page -->
+          <rect x="-1" y="0" width="150" height="700" fill="url(#fade-l)"/>
+          <rect x="1231" y="0" width="150" height="700" fill="url(#fade-r)"/>
+          <rect x="0" y="-1" width="1380" height="45" fill="url(#fade-t)"/>
+          <rect x="0" y="611" width="1380" height="90" fill="url(#fade-b)"/>
+
+          <!-- The route: Beijing, Nairobi, Berlin, Köln -->
+          <path class="arc arc-1" pathLength="1" d="M1256.1 215.2 Q998.6 667.5 494.1 615.9"/>
+          <path class="arc arc-2" pathLength="1" d="M468.6 596.7 Q473.4 306.4 253 92.7"/>
+          <path class="arc arc-3" pathLength="1" d="M227.6 89.5 Q208.1 129.4 185.8 111"/>
+          <path class="arrow arrow-1" d="M0 0 L-13 -6 L-13 6 Z" transform="translate(494.1 615.9) rotate(-174)"/>
+          <path class="arrow arrow-2" d="M0 0 L-13 -6 L-13 6 Z" transform="translate(253 92.7) rotate(-136)"/>
+          <path class="arrow arrow-3" d="M0 0 L-13 -6 L-13 6 Z" transform="translate(185.8 111) rotate(-140)"/>
+
+          <g class="stop">
+            <circle cx="1264.1" cy="201" r="11"/>
+            <text class="num" x="1264.1" y="206" text-anchor="middle">1</text>
+            <text class="label" x="1282.1" y="207" text-anchor="start">Beijing</text>
+          </g>
+          <g class="stop">
+            <circle cx="468.2" cy="612.9" r="11"/>
+            <text class="num" x="468.2" y="617.9" text-anchor="middle">2</text>
+            <text class="label" x="451.2" y="618.9" text-anchor="end">Nairobi</text>
+          </g>
+          <g class="stop">
+            <circle cx="234" cy="74.8" r="11"/>
+            <text class="num" x="234" y="79.8" text-anchor="middle">3</text>
+            <text class="label" x="251" y="68.8" text-anchor="start">Berlin</text>
+          </g>
+          <g class="stop now">
+            <circle cx="169.6" cy="90.6" r="11"/>
+            <text class="num" x="169.6" y="95.6" text-anchor="middle">4</text>
+            <text class="label" x="152.6" y="96.6" text-anchor="end">Köln</text>
+          </g>
+        </svg>
+        <figcaption class="map-key">My research journey: Beijing, Nairobi, Berlin and Köln.</figcaption>
+      </figure>
+    </section>
+
+    <section class="wrap section" id="about" aria-labelledby="about-h">
+      <h2 id="about-h">About</h2>
+      <div class="section-body">
+        <p>I report on how technology moves between China, Africa and Europe. Journalist and researcher in Köln. I edit at Deutsche Welle and write about the rules that shape platforms, AI and the people who use them.</p>
+        <p>For eight years I've covered the tech industry in China, East Africa, the United States and Germany. The thread running through it is how technology flows between regions, and who gets to set the rules along the way.</p>
+        <p>My research looks at China-Africa tech flows and at EU digital regulation, including the Digital Services Act, the Digital Markets Act and the AI Act. My research and reporting on China-Africa tech has been referenced by the Alliance for Securing Democracy, the Konrad-Adenauer-Stiftung, the United States Institute of Peace, the Africa Policy Research Institute and the Center for Global Studies in Bonn.</p>
+      </div>
+    </section>
+
+    <section class="wrap section" id="work" aria-labelledby="work-h">
+      <h2 id="work-h">The archive</h2>
+      <div class="section-body">
+        <ul class="filters" aria-label="Show work from a place">
+          <li><button type="button" data-filter="all" aria-pressed="true">All places</button></li>
+          <li><button type="button" data-filter="beijing" aria-pressed="false">Beijing</button></li>
+          <li><button type="button" data-filter="nyeri" aria-pressed="false">Nyeri</button></li>
+          <li><button type="button" data-filter="nairobi" aria-pressed="false">Nairobi</button></li>
+          <li><button type="button" data-filter="yiwu" aria-pressed="false">Yiwu</button></li>
+          <li><button type="button" data-filter="inner-mongolia" aria-pressed="false">Inner Mongolia</button></li>
+          <li><button type="button" data-filter="hainan" aria-pressed="false">Hainan</button></li>
+        </ul>
+        <p class="filter-status" id="filter-status" aria-live="polite"></p>
+
+        <!-- Each list runs newest first. Add new pieces at the top of the right list. -->
+        <div class="group">
+          <h3 class="group-title">Writing</h3>
+          <ul class="entries">
+            <li class="entry" data-places="yiwu">
+              <!-- TODO: add the link and publication date -->
+              <p class="meta"><span class="place">Yiwu, China</span><span class="outlet">The Continent</span><span class="stamp">Africa ↔ China</span></p>
+              <h4><a href="#">African merchants in Yiwu</a></h4>
+              <p>How African traders in Yiwu use Chinese consumer apps like WeChat Pay, YiWuGo and HuoLala as an improvised supply chain, and why zero tariff policies have done less than promised.</p>
+            </li>
+            <li class="entry" data-places="nyeri">
+              <p class="meta"><span class="place">Nyeri, Kenya</span><span class="outlet">The Continent</span><time datetime="2026-01-31">January 2026</time><span class="stamp">United States ↔ Kenya</span></p>
+              <h4><a href="https://continent.substack.com/p/kenyas-first-chipmaker-caught-in">The fight to save Kenya's first chipmaker</a></h4>
+              <p>How Kenya's only semiconductor manufacturer grew under Washington's push to move chip supply chains away from China, and what it faces now that US priorities have shifted.</p>
+            </li>
+            <li class="entry" data-places="nairobi">
+              <p class="meta"><span class="place">Nairobi, Kenya</span><span class="outlet">TechCabal</span><time datetime="2021-10-13">October 2021</time></p>
+              <h4><a href="https://techcabal.com/2021/10/13/kenya-landmarking-ruling-against-uber/">Kenya's high court issues landmark ruling against Uber</a></h4>
+              <p>On the case 34 Uber drivers brought over fare cuts, and the court's finding that Uber's Kenyan company and its Amsterdam-based parent are effectively one entity and both liable. Set against the wider fight over how Uber treats its drivers.</p>
+            </li>
+            <li class="entry" data-places="nairobi">
+              <p class="meta"><span class="place">Nairobi, Kenya</span><span class="outlet">Hardware Things</span><time datetime="2021-10-01">October 2021</time><span class="stamp">China → Kenya</span></p>
+              <h4><a href="https://hardwarethings.org/how-to-sell-smartphones-fast-in-kenya-tecno">The TECNO playbook: How to sell smartphones fast in Kenya</a></h4>
+              <p>How the Chinese phone brand TECNO became one of Kenya's top sellers, from its customer research and distributor network to the incentives that win it space in the phone shops of Nairobi's Luthuli Avenue.</p>
+            </li>
+            <li class="entry" data-places="nairobi">
+              <p class="meta"><span class="place">Nairobi, Kenya</span><span class="outlet">Frontier Fintech</span><time datetime="2021-08-02">August 2021</time><span class="stamp">China → Africa</span></p>
+              <h4><a href="https://frontierfintech.substack.com/p/27-china-africa-tech-a-guest-post">China-Africa tech</a></h4>
+              <p>A guest post for Samora Kariuki's Frontier Fintech newsletter on how African business leaders should think about Chinese tech companies, with Huawei as the case study: where it came from, its ties to the state, and why fears of spying deserve scrutiny even though cutting Huawei out isn't realistic.</p>
+            </li>
+            <li class="entry" data-places="nairobi">
+              <p class="meta"><span class="place">Nairobi, Kenya</span><span class="outlet">AI Now Institute</span><time datetime="2021-05-27">May 2021</time><span class="stamp">Africa ↔ China</span></p>
+              <h4><a href="https://ainowinstitute.org/publications/guest-post/some-myths-versus-realities-of-africa-china-tech-narratives-2">Some myths versus realities of Africa-China tech narratives</a></h4>
+              <p>An essay drawing on my years working inside China's tech industry, on the gap between how English-language media framed Chinese tech and what I saw from the inside, and why China's growing role in Africa's digital economy got so little attention. Part of AI Now's series on China tech narratives.</p>
+            </li>
+            <li class="entry" data-places="nairobi">
+              <p class="meta"><span class="place">Nairobi, Kenya</span><span class="outlet">China Africa Project, republished by SEEJ-Africa</span><time datetime="2020-09-03">September 2020</time><span class="stamp">Africa → China</span></p>
+              <h4><a href="https://www.seej-africa.org/2020/09/03/africas-donkeys-and-traditional-chinese-medicine-tcm/">Africa's donkeys and traditional Chinese medicine</a></h4>
+              <p>How China's makers of ejiao, a gelatin made from donkey hides, turned to Africa for skins as China's own donkey population shrank, and what happened when countries including Kenya moved to restrict the slaughter and export of donkeys.</p>
+            </li>
+            <li class="entry" data-places="nairobi">
+              <p class="meta"><span class="place">Nairobi, Kenya</span><span class="outlet">Quartz Africa</span><time datetime="2020-03">March 2020</time><span class="stamp">China → Africa</span></p>
+              <h4><a href="https://qz.com/africa/1815825/tiktok-is-winning-young-african-stars-from-youtube-instagram">TikTok is quietly snapping up creatives from YouTube and Instagram for a full Africa roll-out</a></h4>
+              <p>How TikTok pulled creators in Kenya, Nigeria and South Africa away from Instagram and YouTube with talent recruiters, local offices and brand tie-ups, including a campaign in Kenya with Chinese phone maker Transsion's Infinix brand, and why its local, location-aware feed caught on.</p>
+            </li>
+            <li class="entry" data-places="">
+              <!-- TODO: check the month it was published -->
+              <p class="meta"><span class="place">China and Africa</span><span class="outlet">Quartz Africa</span><time datetime="2020">2020</time><span class="stamp">China → Africa</span></p>
+              <h4><a href="https://qz.com/africa/1784293/young-chinese-tech-biotech-startups-look-to-open-in-africa">A fresh crop of China's most promising tech companies are looking to set up shop in Africa in 2020</a></h4>
+              <p>On the Chinese private tech firms, from Opera and Huawei to Transsion and StarTimes, that stepped up their investment in Africa at the end of 2019, and the newly listed Chinese startups in healthcare, AI and rail technology looking to follow them.</p>
+            </li>
+            <li class="entry" data-places="">
+              <!-- TODO: add the publication date (probably late 2019) -->
+              <p class="meta"><span class="place">China and Africa</span><span class="outlet">Quartz Africa</span><span class="stamp">China → Africa</span></p>
+              <h4><a href="https://qz.com/africa/1764356/china-makes-majority-of-africas-smartphones">China is making more of Africa's phones than you think</a></h4>
+              <p>How Chinese phone makers, led by Transsion's Tecno and Infinix brands, came to dominate Africa's market with affordable phones, and how their roots as cheap "shanzhai" copycat makers in China helped them push out Samsung and Nokia.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="group">
+          <h3 class="group-title">Video</h3>
+          <ul class="entries">
+            <li class="entry" data-places="">
+              <!-- TODO: add the publication date -->
+              <p class="meta"><span class="place">Kenya</span><span class="outlet">The 77 Percent, Deutsche Welle</span><span class="stamp">Kenya → Myanmar</span></p>
+              <h4><a href="https://www.youtube.com/watch?v=BC6hvI11vU4">How Kenyans become forced scammers</a></h4>
+              <p>A documentary on Kenyans lured abroad by job offers, trafficked into scam compounds in Myanmar, and brought home after being rescued.</p>
+            </li>
+            <li class="entry" data-places="inner-mongolia hainan">
+              <!-- TODO: check this title matches the video's title on YouTube -->
+              <p class="meta"><span class="place">Inner Mongolia and Hainan, China</span><span class="outlet">Planet A, Deutsche Welle</span><time datetime="2026-03-06">March 2026</time></p>
+              <h4><a href="https://www.youtube.com/watch?v=eyklsgOClJA">Underwater and orbital data centers</a></h4>
+              <p>A report on whether sinking servers into the sea or sending them into orbit could cut the energy and water used to cool them. Reported from the data center clusters of Inner Mongolia and an underwater data center project in Hainan.</p>
+            </li>
+            <li class="entry" data-places="">
+              <!-- TODO: add the publication date -->
+              <p class="meta"><span class="place">In German</span><span class="outlet">Shift, DW Deutsch</span></p>
+              <h4><a href="https://www.youtube.com/watch?v=vQRT9z7hQqQ" lang="de">Wie Social Media Schleusern und Menschenhändlern hilft</a></h4>
+              <p>How social media helps people smugglers and human traffickers.</p>
+            </li>
+            <li class="entry" data-places="">
+              <!-- TODO: replace # with the link to the video, and add the outlet and publication date -->
+              <p class="meta"><span class="place">Kenya</span></p>
+              <h4><a href="#">Former Kenyan TikTok moderator exposes traumatic work conditions</a></h4>
+              <p>A former TikTok content moderator in Kenya describes what the job was really like, and the trauma that came with it.</p>
+            </li>
+            <li class="entry" data-places="">
+              <!-- TODO: check the description -->
+              <p class="meta"><span class="place">United States</span><span class="outlet">Deutsche Welle</span><time datetime="2023-01-09">January 2023</time></p>
+              <h4><a href="https://www.dw.com/en/quantum-computers-and-the-future-of-us-made-microchips/video-64325717">Quantum computers and the future of US-made microchips</a></h4>
+              <p>On quantum computers and what they could mean for the future of chips made in the United States.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="group">
+          <h3 class="group-title">Projects</h3>
+          <ul class="entries">
+            <li class="entry" data-places="beijing">
+              <p class="meta"><span class="place">Beijing, China</span><span class="outlet">LLM thesis, Yenching Academy of Peking University</span><time datetime="2018">2018</time></p>
+              <h4><a href="thesis-presentation.pdf">Administering smart legal contracts via blockchain</a></h4>
+              <p>My thesis presentation on whether smart contracts can be legally binding under Chinese law, and what they would need to hold up in a dispute, with a case study of a freelance contract. Originally presented in 2018 and restyled in 2026. Also available as a <a href="thesis-slides.pptx">PowerPoint file</a>.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section" id="community" aria-labelledby="community-h">
+      <h2 id="community-h">Community and training</h2>
+      <div class="section-body">
+        <ul class="records">
+          <li><strong>International Press Association of East Africa</strong><span>Co-chair</span></li>
+          <li><strong>Salzburg Global Seminar</strong><span>Tech Public Policy fellow</span></li>
+          <li><strong>Refugee reporters in Kakuma and Kalobeyei, Kenya</strong><span>Social media video training</span></li>
+          <li><strong>DW Akademie AI literacy curriculum</strong><span>Trainer for the AI &amp; Gender and AI in the Newsroom fellowship, with a session on audiences and sustainability</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap section" id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Contact</h2>
+      <div class="section-body">
+        <p>I'm open to conversations about tech policy, research collaborations and reporting projects.</p>
+        <ul class="contact-links">
+          <li><a href="mailto:asahaiwilliams@gmail.com">asahaiwilliams@gmail.com</a></li>
+          <!-- TODO: replace # with your LinkedIn profile link -->
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="https://github.com/alexandrias-archive">GitHub</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p><span>© 2026 Alexandria Williams</span><span>Map outlines from Natural Earth</span></p>
+  </footer>
+
+  <script>
+    (function () {
+      var buttons = document.querySelectorAll(".filters button");
+      var entries = document.querySelectorAll(".entry");
+      var groups = document.querySelectorAll(".group");
+      var status = document.getElementById("filter-status");
+
+      function setFilter(place) {
+        var count = 0;
+        entries.forEach(function (entry) {
+          var places = entry.getAttribute("data-places").split(" ");
+          var show = place === "all" || places.indexOf(place) !== -1;
+          entry.hidden = !show;
+          if (show) count++;
+        });
+        groups.forEach(function (g) {
+          g.hidden = !g.querySelector(".entry:not([hidden])");
+        });
+        var name = "";
+        buttons.forEach(function (b) {
+          var on = b.getAttribute("data-filter") === place;
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+          if (on) name = b.textContent;
+        });
+        status.textContent = place === "all" ? "" :
+          "Showing " + count + (count === 1 ? " piece" : " pieces") + " from " + name + ".";
+      }
+
+      buttons.forEach(function (b) {
+        b.addEventListener("click", function () { setFilter(b.getAttribute("data-filter")); });
+      });
+    })();
+  </script>
+</body>
+</html>
